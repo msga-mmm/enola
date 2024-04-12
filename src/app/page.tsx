@@ -1,12 +1,29 @@
+"use client";
+
 import { SignIn } from "@/components/sign-in";
 import { SignOut } from "@/components/sign-out";
+import { useSession } from "next-auth/react";
 
 export default function Home() {
+  const { data: session, status } = useSession();
+
+  if (status === "loading") {
+    return <p>loading...</p>;
+  }
+
+  if (status === "unauthenticated") {
+    return (
+      <div>
+        <SignIn />
+      </div>
+    );
+  }
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <SignIn />
+    <div>
+      <p>{session?.user?.name}</p>
 
       <SignOut />
-    </main>
+    </div>
   );
 }
